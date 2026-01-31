@@ -59,7 +59,7 @@ export default async function MenuPage({
     "Selamatan",
     "Ulang_Tahun",
     "Studi_Tour",
-    "Lainnya",
+    "Rapat",
   ];
 
   return (

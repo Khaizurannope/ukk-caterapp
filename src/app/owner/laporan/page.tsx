@@ -100,10 +100,10 @@ export default async function OwnerLaporanPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {format(t.createdAt, "dd MMM yyyy", { locale: id })}
+                        {format(new Date(t.createdAt), "dd MMM yyyy", { locale: id })}
                         <br />
                         <span className="text-sm text-muted-foreground">
-                          {format(t.createdAt, "HH:mm", { locale: id })}
+                          {format(new Date(t.createdAt), "HH:mm", { locale: id })}
                         </span>
                       </TableCell>
                       <TableCell>

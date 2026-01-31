@@ -1,7 +1,7 @@
 import { getDashboardOwner } from "@/actions/dashboard-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, ShoppingCart, Users, Package, DollarSign, Calendar } from "lucide-react";
+import { TrendingUp, ShoppingCart, Users, Package, DollarSign, Calendar, Activity } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
@@ -128,6 +128,62 @@ export default async function OwnerDashboardPage() {
         </Card>
       </div>
 
+      {/* Order Status Breakdown */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Status Pesanan (Bulan Ini)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            {stats.statusStats && stats.statusStats.length > 0 ? (
+               stats.statusStats.map((s: any) => {
+                 const percentage = stats.pesananBulanIni > 0 
+                   ? Math.min((s.count / stats.pesananBulanIni) * 100, 100) 
+                   : 0;
+                 
+                 // Color mapping for each status
+                 const getStatusColor = (status: string) => {
+                   switch (status) {
+                     case "Menunggu_Konfirmasi":
+                       return { bar: "bg-yellow-500", badge: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100", dot: "bg-yellow-500" };
+                     case "Sedang_Diproses":
+                       return { bar: "bg-blue-500", badge: "bg-blue-100 text-blue-800 hover:bg-blue-100", dot: "bg-blue-500" };
+                     case "Menunggu_Kurir":
+                       return { bar: "bg-purple-500", badge: "bg-purple-100 text-purple-800 hover:bg-purple-100", dot: "bg-purple-500" };
+                     case "Sedang_Dikirim":
+                       return { bar: "bg-orange-500", badge: "bg-orange-100 text-orange-800 hover:bg-orange-100", dot: "bg-orange-500" };
+                     case "Selesai":
+                       return { bar: "bg-green-500", badge: "bg-green-100 text-green-800 hover:bg-green-100", dot: "bg-green-500" };
+                     default:
+                       return { bar: "bg-gray-500", badge: "bg-gray-100 text-gray-800 hover:bg-gray-100", dot: "bg-gray-500" };
+                   }
+                 };
+                 
+                 const colors = getStatusColor(s.status);
+                 
+                 return (
+                   <div key={s.status} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+                        <span className="text-sm font-medium">{statusLabel(s.status)}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                           <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+                              <div 
+                                  className={`h-full ${colors.bar}`}
+                                  style={{ width: `${percentage}%` }} 
+                              />
+                           </div>
+                           <Badge className={colors.badge}>{s.count}</Badge>
+                      </div>
+                   </div>
+                 );
+               })
+            ) : (
+                <p className="text-sm text-muted-foreground">Belum ada data status pesanan.</p>
+            )}
+          </CardContent>
+        </Card>
+
       {/* Recent Orders */}
       <Card>
         <CardHeader>
@@ -140,7 +196,7 @@ export default async function OwnerDashboardPage() {
                 Belum ada pesanan
               </p>
             ) : (
-              stats.pesananTerbaru.map((pesanan) => (
+              stats.pesananTerbaru.map((pesanan: any) => (
                 <div
                   key={pesanan.id.toString()}
                   className="flex items-center justify-between p-4 border rounded-lg"
@@ -148,7 +204,7 @@ export default async function OwnerDashboardPage() {
                   <div className="flex-1">
                     <p className="font-medium">{pesanan.pelanggan.namaPelanggan}</p>
                     <p className="text-sm text-muted-foreground">
-                      {pesanan.noResi} • {format(pesanan.createdAt, "dd MMM yyyy, HH:mm", { locale: id })}
+                      {pesanan.noResi} • {format(new Date(pesanan.createdAt), "dd MMM yyyy, HH:mm", { locale: id })}
                     </p>
                   </div>
                   <div className="text-right">

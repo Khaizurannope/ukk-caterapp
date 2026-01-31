@@ -3,6 +3,15 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+// Helper to serialize BigInt
+const serializeData = (data: any) => {
+  return JSON.parse(
+    JSON.stringify(data, (key, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    )
+  );
+};
+
 // GET DASHBOARD DATA (OWNER)
 export async function getDashboardOwner() {
   try {
@@ -36,7 +45,9 @@ export async function getDashboardOwner() {
 
     // Total pesanan bulan ini
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    firstDayOfMonth.setHours(0, 0, 0, 0);
     const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    lastDayOfMonth.setHours(23, 59, 59, 999);
 
     const pesananBulanIni = await prisma.pemesanan.count({
       where: {
@@ -75,8 +86,50 @@ export async function getDashboardOwner() {
       orderBy: { createdAt: "desc" },
     });
 
+    // Breakdown Stats (For Monitoring) - Monthly orders grouped by status
+    const statusStats = await prisma.pemesanan.groupBy({
+      by: ['statusPesan'],
+      where: {
+        createdAt: {
+          gte: firstDayOfMonth,
+          lte: lastDayOfMonth
+        }
+      },
+      _count: {
+        id: true
+      }
+    });
+
+    // Daily Stats (Last 7 Days) for Chart
+    const last7Days = new Date();
+    last7Days.setDate(last7Days.getDate() - 6);
+    last7Days.setHours(0,0,0,0);
+    
+    const dailyStats = await prisma.pemesanan.groupBy({
+      by: ['createdAt'],
+      where: {
+        createdAt: {
+          gte: last7Days
+        }
+      },
+      _sum: {
+        totalBayar: true,
+      },
+      _count: {
+        id: true
+      }
+    });
+
+    // Normalize daily stats (since groupBy createdAt includes time, this is tricky. 
+    // Prisma doesn't support Date-only grouping easily without raw query.
+    // We'll simplify: just fetch orders last 7 days and process in JS)
+    const ordersLast7Days = await prisma.pemesanan.findMany({
+       where: { createdAt: { gte: last7Days } },
+       select: { createdAt: true, totalBayar: true }
+    });
+
     return {
-      data: {
+      data: serializeData({
         pesananHariIni,
         pendapatanHariIni: Number(pendapatanHariIni._sum.totalBayar || 0),
         pesananBulanIni,
@@ -84,7 +137,9 @@ export async function getDashboardOwner() {
         totalPelanggan,
         totalPaket,
         pesananTerbaru,
-      },
+        statusStats: statusStats.map(s => ({ status: s.statusPesan, count: s._count.id })),
+        ordersLast7Days
+      }),
     };
   } catch (error) {
     console.error(error);
@@ -131,8 +186,7 @@ export async function getLaporanTransaksi(startDate?: Date, endDate?: Date) {
     // Hitung total
     const total = transaksi.reduce((acc: number, t: { totalBayar: bigint | null }) => acc + Number(t.totalBayar || 0), 0);
 
-    revalidatePath("/owner/laporan");
-    return { data: transaksi, total };
+    return { data: serializeData(transaksi), total };
   } catch (error) {
     console.error(error);
     return { error: "Gagal mengambil laporan transaksi" };
