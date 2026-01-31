@@ -41,12 +41,9 @@ export default function LoginPage() {
         });
 
         if (result?.error) {
-          // Handle specific auth errors
-          if (result.error === "CredentialsSignin" || result.error.includes("Email") || result.error.includes("Password")) {
-            toast.error("Email atau password tidak valid. Silakan coba lagi.");
-          } else {
-            toast.error(result.error);
-          }
+          // Semua error dari credentials login ditampilkan sebagai invalid email/password
+          // NextAuth mengembalikan "CredentialsSignin" atau "Configuration" untuk error autentikasi
+          toast.error("Email atau password tidak valid. Silakan coba lagi.");
           return;
         }
 

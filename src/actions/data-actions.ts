@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// GET ALL JENIS PEMBAYARAN
+// AMBIL SEMUA JENIS PEMBAYARAN
 export async function getAllJenisPembayaran() {
   try {
     const data = await prisma.jenisPembayaran.findMany({
@@ -19,7 +19,7 @@ export async function getAllJenisPembayaran() {
   }
 }
 
-// Alias for checkout page
+// Alias untuk halaman checkout
 export async function getJenisPembayaran() {
   try {
     const data = await prisma.jenisPembayaran.findMany({
@@ -35,7 +35,7 @@ export async function getJenisPembayaran() {
   }
 }
 
-// GET ALL PELANGGAN
+// AMBIL SEMUA PELANGGAN
 export async function getAllPelanggan() {
   try {
     const data = await prisma.pelanggan.findMany({
@@ -48,7 +48,7 @@ export async function getAllPelanggan() {
   }
 }
 
-// GET PELANGGAN BY ID
+// AMBIL PELANGGAN BERDASARKAN ID
 export async function getPelangganById(id: number) {
   try {
     const data = await prisma.pelanggan.findUnique({
@@ -61,7 +61,7 @@ export async function getPelangganById(id: number) {
   }
 }
 
-// DELETE PELANGGAN
+// HAPUS PELANGGAN
 export async function deletePelanggan(id: number) {
   try {
     await prisma.pelanggan.delete({

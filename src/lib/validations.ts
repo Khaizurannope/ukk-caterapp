@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // =====================================
-// AUTH SCHEMAS
+// SKEMA AUTENTIKASI
 // =====================================
 
 export const LoginSchema = z.object({
@@ -18,7 +18,7 @@ export const RegisterPelangganSchema = z.object({
 });
 
 // =====================================
-// PAKET SCHEMAS
+// SKEMA PAKET
 // =====================================
 
 export const PaketSchema = z.object({
@@ -34,7 +34,7 @@ export const PaketSchema = z.object({
 });
 
 // =====================================
-// PEMESANAN SCHEMAS
+// SKEMA PEMESANAN
 // =====================================
 
 export const PemesananSchema = z.object({
@@ -55,7 +55,7 @@ export const UpdateStatusPesananSchema = z.object({
 });
 
 // =====================================
-// PENGIRIMAN SCHEMAS
+// SKEMA PENGIRIMAN
 // =====================================
 
 export const AssignKurirSchema = z.object({
@@ -70,7 +70,7 @@ export const UpdatePengirimanSchema = z.object({
 });
 
 // =====================================
-// USER SCHEMAS
+// SKEMA USER
 // =====================================
 
 export const UserSchema = z.object({
@@ -81,7 +81,7 @@ export const UserSchema = z.object({
 });
 
 // =====================================
-// JENIS PEMBAYARAN SCHEMAS
+// SKEMA JENIS PEMBAYARAN
 // =====================================
 
 export const JenisPembayaranSchema = z.object({
@@ -96,7 +96,7 @@ export const DetailJenisPembayaranSchema = z.object({
 });
 
 // =====================================
-// TYPE EXPORTS
+// EKSPOR TIPE
 // =====================================
 
 export type LoginInput = z.infer<typeof LoginSchema>;

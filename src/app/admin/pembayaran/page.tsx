@@ -27,7 +27,12 @@ export default async function AdminPembayaranPage() {
             <CardTitle>{jenis.metodePembayaran}</CardTitle>
           </CardHeader>
           <CardContent>
-            {jenis.detailJenisPembayarans.length === 0 ? (
+            {/* COD tidak perlu detail rekening */}
+            {jenis.metodePembayaran.toLowerCase() === "cod" ? (
+              <p className="text-center text-muted-foreground py-4">
+                Pembayaran tunai saat barang diterima
+              </p>
+            ) : jenis.detailJenisPembayarans.length === 0 ? (
               <p className="text-center text-muted-foreground py-4">
                 Belum ada rekening untuk metode ini
               </p>

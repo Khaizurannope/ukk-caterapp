@@ -65,20 +65,20 @@ export default function AddToCartButton({ paket }: { paket: Paket }) {
     setIsLoading(true);
 
     try {
-      // Get existing cart from localStorage
+      // Ambil keranjang yang ada dari localStorage
       const existingCart = localStorage.getItem("cart");
       const cart: CartItem[] = existingCart ? JSON.parse(existingCart) : [];
 
-      // Check if item already exists
+      // Cek apakah item sudah ada
       const existingIndex = cart.findIndex(
         (item) => item.paketId === paket.id
       );
 
       if (existingIndex >= 0) {
-        // Update quantity
+        // Perbarui jumlah
         cart[existingIndex].quantity += quantity;
       } else {
-        // Add new item
+        // Tambah item baru
         cart.push({
           paketId: paket.id,
           namaPaket: paket.namaPaket,
@@ -90,10 +90,10 @@ export default function AddToCartButton({ paket }: { paket: Paket }) {
         });
       }
 
-      // Save to localStorage
+      // Simpan ke localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
 
-      // Dispatch custom event for cart update
+      // Kirim event kustom untuk update keranjang
       window.dispatchEvent(new Event("cartUpdated"));
 
       toast.success("Berhasil ditambahkan ke keranjang!");

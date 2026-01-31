@@ -5,10 +5,10 @@ import { PemesananInput, UpdateStatusPesananInput, UpdateStatusPesananSchema } f
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 
-// Type alias
+// Tipe alias untuk status pesanan
 type StatusPesan = "Menunggu_Konfirmasi" | "Sedang_Diproses" | "Menunggu_Kurir" | "Sedang_Dikirim" | "Selesai";
 
-// Helper untuk generate No Resi
+// Helper untuk membuat Nomor Resi
 function generateNoResi(): string {
   const date = new Date();
   const year = date.getFullYear().toString().slice(-2);
@@ -18,7 +18,7 @@ function generateNoResi(): string {
   return `CTR-${year}${month}${day}-${random}`;
 }
 
-// GET ALL PEMESANAN (ADMIN)
+// AMBIL SEMUA PEMESANAN (ADMIN)
 export async function getAllPemesanan() {
   try {
     const pemesanans = await prisma.pemesanan.findMany({
@@ -45,7 +45,7 @@ export async function getAllPemesanan() {
   }
 }
 
-// GET PEMESANAN BY PELANGGAN ID
+// AMBIL PEMESANAN BERDASARKAN ID PELANGGAN
 export async function getPemesananByPelangganId(idPelanggan: number) {
   try {
     const pemesanans = await prisma.pemesanan.findMany({
@@ -72,7 +72,7 @@ export async function getPemesananByPelangganId(idPelanggan: number) {
   }
 }
 
-// GET PEMESANAN BY ID
+// AMBIL PEMESANAN BERDASARKAN ID
 export async function getPemesananById(id: number) {
   try {
     const pemesanan = await prisma.pemesanan.findUnique({
@@ -99,15 +99,15 @@ export async function getPemesananById(id: number) {
   }
 }
 
-// CREATE PEMESANAN (CUSTOMER)
+// BUAT PEMESANAN (PELANGGAN)
 export async function createPemesanan(data: PemesananInput) {
   try {
     const { pelangganId, jenisPembayaranId, alamatKirim, tglPesan, items } = data;
 
-    // Hitung total
+    // Hitung total pembayaran
     const totalBayar = items.reduce((acc, item) => acc + (item.hargaPaket * item.jumlahOrder), 0);
 
-    // Create pemesanan dengan transaction
+    // Buat pemesanan dengan transaksi database
     const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const pemesanan = await tx.pemesanan.create({
         data: {
@@ -121,7 +121,7 @@ export async function createPemesanan(data: PemesananInput) {
         },
       });
 
-      // Create detail pemesanan
+      // Buat detail pemesanan
       for (const item of items) {
         await tx.detailPemesanan.create({
           data: {
@@ -135,16 +135,22 @@ export async function createPemesanan(data: PemesananInput) {
       return pemesanan;
     });
 
+    const serializedResult = JSON.parse(JSON.stringify(result, (key, value) =>
+      typeof value === 'bigint'
+        ? value.toString()
+        : value
+    ));
+
     revalidatePath("/admin/pesanan");
     revalidatePath("/pelanggan");
-    return { success: "Pesanan berhasil dibuat", data: result };
+    return { success: "Pesanan berhasil dibuat", data: serializedResult };
   } catch (error) {
-    console.error(error);
-    return { error: "Gagal membuat pesanan" };
+    console.error("Error createPemesanan:", error);
+    return { error: "Gagal membuat pesanan. Silakan coba lagi nanti." };
   }
 }
 
-// UPDATE STATUS PEMESANAN (ADMIN)
+// PERBARUI STATUS PEMESANAN (ADMIN)
 export async function updateStatusPemesanan(data: UpdateStatusPesananInput) {
   try {
     const validatedData = UpdateStatusPesananSchema.safeParse(data);
@@ -171,7 +177,7 @@ export async function updateStatusPemesanan(data: UpdateStatusPesananInput) {
   }
 }
 
-// DELETE PEMESANAN
+// HAPUS PEMESANAN
 export async function deletePemesanan(id: number) {
   try {
     await prisma.pemesanan.delete({
@@ -186,14 +192,14 @@ export async function deletePemesanan(id: number) {
   }
 }
 
-// UPLOAD BUKTI TRANSFER
+// UNGGAH BUKTI TRANSFER
 export async function uploadBuktiTransfer(pesananId: number, buktiUrl: string) {
   try {
     await prisma.pemesanan.update({
       where: { id: BigInt(pesananId) },
       data: {
         buktiTransfer: buktiUrl,
-        statusPesan: "Sedang_Diproses", // Otomatis update status jika sudah upload (optional)
+        statusPesan: "Sedang_Diproses", // Otomatis update status jika sudah upload (opsional)
       },
     });
 

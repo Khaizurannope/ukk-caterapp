@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { AssignKurirInput, UpdatePengirimanInput, UpdatePengirimanSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 
-// Type alias
+// Tipe alias untuk status pengiriman
 type StatusKirim = "Sedang_Dikirim" | "Tiba_Ditujuan";
 
-// GET PENGIRIMAN BY KURIR ID
+// AMBIL PENGIRIMAN BERDASARKAN ID KURIR
 export async function getPengirimanByKurirId(idUser: number) {
   try {
     const pengirimans = await prisma.pengiriman.findMany({
@@ -33,7 +33,7 @@ export async function getPengirimanByKurirId(idUser: number) {
   }
 }
 
-// GET ALL PENGIRIMAN (ADMIN)
+// AMBIL SEMUA PENGIRIMAN (ADMIN)
 export async function getAllPengiriman() {
   try {
     const pengirimans = await prisma.pengiriman.findMany({
@@ -54,12 +54,12 @@ export async function getAllPengiriman() {
   }
 }
 
-// ASSIGN KURIR (ADMIN)
+// TUGASKAN KURIR (ADMIN)
 export async function assignKurir(data: AssignKurirInput) {
   try {
     const { idPesan, idUser } = data;
 
-    // Create pengiriman
+    // Buat data pengiriman
     await prisma.pengiriman.create({
       data: {
         idPesan: BigInt(idPesan),
@@ -69,7 +69,7 @@ export async function assignKurir(data: AssignKurirInput) {
       },
     });
 
-    // Update status pemesanan
+    // Perbarui status pemesanan
     await prisma.pemesanan.update({
       where: { id: BigInt(idPesan) },
       data: { statusPesan: "Sedang_Dikirim" },
@@ -85,7 +85,7 @@ export async function assignKurir(data: AssignKurirInput) {
   }
 }
 
-// UPDATE PENGIRIMAN (KURIR)
+// PERBARUI PENGIRIMAN (KURIR)
 export async function updatePengiriman(data: UpdatePengirimanInput) {
   try {
     const validatedData = UpdatePengirimanSchema.safeParse(data);
@@ -117,7 +117,7 @@ export async function updatePengiriman(data: UpdatePengirimanInput) {
       data: updateData,
     });
 
-    // Update Status Pesanan jadi Selesai jika sudah Tiba
+    // Perbarui Status Pesanan menjadi Selesai jika sudah Tiba
     if (statusKirim === "Tiba_Ditujuan") {
         await prisma.pemesanan.update({
             where: { id: updatedPengiriman.idPesan },
@@ -135,7 +135,7 @@ export async function updatePengiriman(data: UpdatePengirimanInput) {
   }
 }
 
-// GET ALL KURIR
+// AMBIL SEMUA KURIR
 export async function getAllKurir() {
   try {
     const kurirs = await prisma.user.findMany({

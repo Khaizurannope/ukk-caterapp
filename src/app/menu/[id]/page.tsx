@@ -10,6 +10,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Utensils, ArrowLeft, Check } from "lucide-react";
 import AddToCartButton from "./add-to-cart-button";
+import ImageGallery from "./image-gallery";
 
 async function getPaket(id: string) {
   const paket = await prisma.paket.findUnique({
@@ -54,13 +55,11 @@ export default async function MenuDetailPage({
     return kategori.replace(/_/g, " ");
   };
 
-  // Parse menu items from deskripsi (assuming comma or newline separated)
+  // Parsing item menu dari deskripsi (dipisahkan dengan koma atau newline)
   const menuItems = paket.deskripsi
     ?.split(/[,\n]/)
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
-
-  const images = [paket.foto1, paket.foto2, paket.foto3].filter(Boolean);
 
   return (
     <div className="min-h-screen">
@@ -95,40 +94,11 @@ export default async function MenuDetailPage({
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Image Gallery */}
-            <div className="space-y-4">
-              <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
-                {images[0] ? (
-                  <Image
-                    src={images[0]}
-                    alt={paket.namaPaket}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <Utensils className="h-20 w-20 text-gray-300" />
-                  </div>
-                )}
-              </div>
-              {images.length > 1 && (
-                <div className="grid grid-cols-3 gap-4">
-                  {images.map((img, index) => (
-                    <div
-                      key={index}
-                      className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden"
-                    >
-                      <Image
-                        src={img!}
-                        alt={`${paket.namaPaket} ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Galeri Gambar */}
+            <ImageGallery 
+              images={[paket.foto1, paket.foto2, paket.foto3]} 
+              productName={paket.namaPaket} 
+            />
 
             {/* Product Info */}
             <div className="space-y-6">

@@ -13,9 +13,9 @@ export const extractedPublicId = (url: string) => {
         const lastPart = parts[parts.length - 1];
         const publicIdWithExtension = lastPart.split(".")[0];
         
-        // Handle folders if present (simplified assumption: last segment is id)
-        // If your images are in folders, standard split might be insufficient.
-        // Better regex approach for Cloudinary URLs:
+        // Menangani folder jika ada (asumsi sederhana: segmen terakhir adalah id)
+        // Jika gambar ada di folder, split standar mungkin tidak cukup.
+        // Pendekatan regex yang lebih baik untuk URL Cloudinary:
         const regex = /\/v\d+\/(.+)\.[a-z]+$/;
         const match = url.match(regex);
         if (match && match[1]) {
@@ -38,7 +38,7 @@ export const deleteImage = async (url: string) => {
     const result = await cloudinary.uploader.destroy(publicId);
     return result;
   } catch (error) {
-    console.error("Cloudinary delete error:", error);
+    console.error("Cloudinary gagal menghapus:", error);
     return null;
   }
 };

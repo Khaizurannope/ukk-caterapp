@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// Helper to serialize BigInt
+// Helper untuk serialisasi BigInt
 const serializeData = (data: any) => {
   return JSON.parse(
     JSON.stringify(data, (key, value) =>
@@ -12,7 +12,7 @@ const serializeData = (data: any) => {
   );
 };
 
-// GET DASHBOARD DATA (OWNER)
+// AMBIL DATA DASHBOARD (OWNER)
 export async function getDashboardOwner() {
   try {
     const today = new Date();
@@ -86,7 +86,7 @@ export async function getDashboardOwner() {
       orderBy: { createdAt: "desc" },
     });
 
-    // Breakdown Stats (For Monitoring) - Monthly orders grouped by status
+    // Statistik Status Pesanan (Monitoring) - Pesanan bulanan dikelompokkan berdasarkan status
     const statusStats = await prisma.pemesanan.groupBy({
       by: ['statusPesan'],
       where: {
@@ -100,7 +100,7 @@ export async function getDashboardOwner() {
       }
     });
 
-    // Daily Stats (Last 7 Days) for Chart
+    // Statistik Harian (7 Hari Terakhir) untuk Grafik
     const last7Days = new Date();
     last7Days.setDate(last7Days.getDate() - 6);
     last7Days.setHours(0,0,0,0);
@@ -120,9 +120,9 @@ export async function getDashboardOwner() {
       }
     });
 
-    // Normalize daily stats (since groupBy createdAt includes time, this is tricky. 
-    // Prisma doesn't support Date-only grouping easily without raw query.
-    // We'll simplify: just fetch orders last 7 days and process in JS)
+    // Normalisasi statistik harian (karena groupBy createdAt termasuk waktu, ini rumit.
+    // Prisma tidak mendukung pengelompokan hanya Tanggal tanpa raw query.
+    // Solusi: ambil pesanan 7 hari terakhir dan proses di JavaScript)
     const ordersLast7Days = await prisma.pemesanan.findMany({
        where: { createdAt: { gte: last7Days } },
        select: { createdAt: true, totalBayar: true }
@@ -147,7 +147,7 @@ export async function getDashboardOwner() {
   }
 }
 
-// GET LAPORAN TRANSAKSI (OWNER)
+// AMBIL LAPORAN TRANSAKSI (OWNER)
 export async function getLaporanTransaksi(startDate?: Date, endDate?: Date) {
   try {
     const where: {

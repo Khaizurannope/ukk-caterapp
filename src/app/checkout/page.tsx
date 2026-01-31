@@ -30,6 +30,8 @@ import {
 import { toast } from "sonner";
 import { createPemesanan } from "@/actions/pemesanan-actions";
 import { getJenisPembayaran } from "@/actions/data-actions";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface CartItem {
   paketId: string;
@@ -48,6 +50,7 @@ interface JenisPembayaran {
     id: bigint;
     tempatBayar: string;
     noRek: string;
+    logo?: string | null;
   }[];
 }
 
@@ -260,38 +263,84 @@ export default function CheckoutPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Select
+                    <RadioGroup
                       value={selectedPembayaran}
                       onValueChange={setSelectedPembayaran}
+                      className="grid gap-4"
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih metode pembayaran" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {jenisPembayaran.map((jp) => (
-                          <SelectItem key={jp.id.toString()} value={jp.id.toString()}>
-                            {jp.metodePembayaran}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    {selectedPembayaran && (
-                      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                        <p className="font-medium mb-2">Rekening Tujuan:</p>
-                        {jenisPembayaran
-                          .find((jp) => jp.id.toString() === selectedPembayaran)
-                          ?.detailJenisPembayarans.map((detail) => (
-                            <div
-                              key={detail.id.toString()}
-                              className="text-sm space-y-1 mb-2 last:mb-0"
-                            >
-                              <p className="font-medium">{detail.tempatBayar}</p>
-                              <p>No. Rek: {detail.noRek}</p>
+                      {jenisPembayaran.map((jp) => {
+                        const isSelected = selectedPembayaran === jp.id.toString();
+                        return (
+                          <div
+                            key={jp.id.toString()}
+                            className={`relative flex flex-col space-y-2 rounded-lg border p-4 transition-all ${
+                              isSelected
+                                ? "border-orange-500 bg-orange-50"
+                                : "border-gray-200 hover:bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <RadioGroupItem
+                                value={jp.id.toString()}
+                                id={`jp-${jp.id}`}
+                                className="text-orange-600 border-gray-400"
+                              />
+                              <Label
+                                htmlFor={`jp-${jp.id}`}
+                                className="font-semibold cursor-pointer flex-1 text-base text-gray-800"
+                              >
+                                {jp.metodePembayaran}
+                              </Label>
                             </div>
-                          ))}
-                      </div>
-                    )}
+
+                            {/* Detail Pembayaran (Logos & Rekening) */}
+                            {isSelected && (
+                              <div className="pl-7 mt-2 space-y-3 animate-in slide-in-from-top-2 duration-200">
+                                {jp.detailJenisPembayarans.length > 0 ? (
+                                  jp.detailJenisPembayarans.map((detail) => (
+                                    <div
+                                      key={detail.id.toString()}
+                                      className="flex items-center gap-4 p-3 bg-white rounded-md border text-sm shadow-sm"
+                                    >
+                                      {detail.logo ? (
+                                        <div className="w-20 h-10 relative flex-shrink-0 flex items-center justify-center p-1 bg-white">
+                                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                                          <img
+                                            src={detail.logo}
+                                            alt={detail.tempatBayar}
+                                            className="max-h-full max-w-full object-contain"
+                                          />
+                                        </div>
+                                      ) : (
+                                        <div className="w-20 h-10 bg-gray-100 rounded flex items-center justify-center text-xs text-muted-foreground font-medium">
+                                          {detail.tempatBayar}
+                                        </div>
+                                      )}
+                                      <div className="flex-1">
+                                        <p className="font-bold text-gray-900">
+                                          {detail.tempatBayar}
+                                        </p>
+                                        <div className="flex items-center gap-2">
+                                          <p className="font-mono text-gray-600 tracking-wide text-base">
+                                            {detail.noRek}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <p className="text-sm text-gray-600 bg-white p-3 rounded border border-dashed border-gray-300">
+                                    {jp.metodePembayaran.toLowerCase() === "cod"
+                                      ? "Bayar tunai saat pesanan diterima di lokasi pengiriman."
+                                      : "Belum ada detail rekening untuk metode ini."}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </RadioGroup>
                   </CardContent>
                 </Card>
 

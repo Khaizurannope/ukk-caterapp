@@ -5,11 +5,11 @@ import { PaketSchema, PaketInput } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import { deleteImage } from "@/lib/cloudinary";
 
-// Type aliases for prisma enums
+// Tipe alias untuk enum Prisma
 type JenisPaket = "Prasmanan" | "Box";
 type KategoriPaket = "Pernikahan" | "Selamatan" | "Ulang_Tahun" | "Studi_Tour" | "Rapat";
 
-// GET ALL PAKET
+// AMBIL SEMUA PAKET
 export async function getAllPaket() {
   try {
     const pakets = await prisma.paket.findMany({
@@ -22,7 +22,7 @@ export async function getAllPaket() {
   }
 }
 
-// GET PAKET BY ID
+// AMBIL PAKET BERDASARKAN ID
 export async function getPaketById(id: number) {
   try {
     const paket = await prisma.paket.findUnique({
@@ -35,7 +35,7 @@ export async function getPaketById(id: number) {
   }
 }
 
-// GET PAKET BY FILTER
+// AMBIL PAKET BERDASARKAN FILTER
 export async function getPaketByFilter(jenis?: string, kategori?: string) {
   try {
     const pakets = await prisma.paket.findMany({
@@ -52,7 +52,7 @@ export async function getPaketByFilter(jenis?: string, kategori?: string) {
   }
 }
 
-// CREATE PAKET
+// TAMBAH PAKET
 export async function createPaket(data: PaketInput) {
   try {
     const validatedData = PaketSchema.safeParse(data);
@@ -86,7 +86,7 @@ export async function createPaket(data: PaketInput) {
   }
 }
 
-// UPDATE PAKET
+// PERBARUI PAKET
 export async function updatePaket(id: number, data: PaketInput) {
   try {
     const validatedData = PaketSchema.safeParse(data);
@@ -95,7 +95,7 @@ export async function updatePaket(id: number, data: PaketInput) {
       return { error: validatedData.error.issues[0].message };
     }
 
-    // Ambil data lama untuk cek perubahan gambar
+    // Ambil data lama untuk mengecek perubahan gambar
     const oldPaket = await prisma.paket.findUnique({
       where: { id: BigInt(id) },
     });
@@ -140,7 +140,7 @@ export async function updatePaket(id: number, data: PaketInput) {
   }
 }
 
-// DELETE PAKET
+// HAPUS PAKET
 export async function deletePaket(id: number) {
   try {
     // Ambil data paket dulu untuk mendapatkan URL gambar
