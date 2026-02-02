@@ -1,4 +1,4 @@
-# 🍽️ Catering App
+# 🍽️ Go-Ring
 
 Aplikasi pemesanan catering berbasis web yang dibangun dengan **Next.js 16**, **Prisma ORM**, dan **PostgreSQL**. Aplikasi ini mendukung multi-role user (Admin, Owner, Kurir, dan Pelanggan) dengan fitur lengkap untuk manajemen pesanan, pengiriman, dan pembayaran.
 
