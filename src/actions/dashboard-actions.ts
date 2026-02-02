@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+
 
 // Helper untuk serialisasi BigInt
 const serializeData = (data: any) => {

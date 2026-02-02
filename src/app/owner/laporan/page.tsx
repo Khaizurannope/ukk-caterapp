@@ -5,6 +5,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
+type Transaksi = {
+  id: string | number;
+  noResi: string;
+  createdAt: string | Date;
+  statusPesan: string;
+  totalBayar: number | string;
+  pelanggan: {
+    namaPelanggan: string;
+    telepon: string;
+  };
+  jenisPembayaran: {
+    metodePembayaran: string;
+  };
+};
+
 export default async function OwnerLaporanPage() {
   const result = await getLaporanTransaksi();
 
@@ -86,7 +101,7 @@ export default async function OwnerLaporanPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transaksi.map((t) => (
+                  {(transaksi as Transaksi[]).map((t) => (
                     <TableRow key={t.id.toString()}>
                       <TableCell className="font-mono text-sm">
                         {t.noResi}
@@ -115,7 +130,7 @@ export default async function OwnerLaporanPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-medium">
-                        {formatRupiah(t.totalBayar)}
+                        {formatRupiah(Number(t.totalBayar))}
                       </TableCell>
                     </TableRow>
                   ))}
