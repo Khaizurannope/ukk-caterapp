@@ -13,8 +13,26 @@ export const RegisterPelangganSchema = z.object({
   namaPelanggan: z.string().min(3, { message: "Nama minimal 3 karakter" }),
   email: z.string().email({ message: "Email tidak valid" }),
   password: z.string().min(6, { message: "Password minimal 6 karakter" }),
+  tglLahir: z.string()
+    .min(1, { message: "Tanggal lahir wajib diisi" })
+    .refine((date) => !isNaN(new Date(date).getTime()), { message: "Format tanggal tidak valid" })
+    .refine((date) => new Date(date) <= new Date(), { message: "Tanggal lahir tidak boleh di masa depan" })
+    .refine((date) => {
+      const today = new Date();
+      const birthDate = new Date(date);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age >= 17;
+    }, { message: "Minimal umur 17 tahun (Wajib memiliki KTP)" }),
   telepon: z.string().min(10, { message: "Nomor telepon minimal 10 digit" }),
-  alamat1: z.string().min(10, { message: "Alamat minimal 10 karakter" }),
+  alamat1: z.string().min(10, { message: "Alamat utama minimal 10 karakter" }),
+  alamat2: z.string().optional(),
+  alamat3: z.string().optional(),
+  kartuId: z.string().min(1, { message: "KTP wajib diupload" }),
+  foto: z.string().optional(),
 });
 
 // =====================================
@@ -96,6 +114,20 @@ export const DetailJenisPembayaranSchema = z.object({
 });
 
 // =====================================
+// SKEMA UPDATE PROFILE
+// =====================================
+
+export const UpdateProfileSchema = z.object({
+  namaPelanggan: z.string().min(3, { message: "Nama minimal 3 karakter" }),
+  tglLahir: z.string().optional(),
+  telepon: z.string().min(10, { message: "Nomor telepon minimal 10 digit" }),
+  alamat1: z.string().min(10, { message: "Alamat utama minimal 10 karakter" }),
+  alamat2: z.string().optional(),
+  alamat3: z.string().optional(),
+  foto: z.string().optional(),
+});
+
+// =====================================
 // EKSPOR TIPE
 // =====================================
 
@@ -109,3 +141,4 @@ export type UpdatePengirimanInput = z.infer<typeof UpdatePengirimanSchema>;
 export type UserInput = z.infer<typeof UserSchema>;
 export type JenisPembayaranInput = z.infer<typeof JenisPembayaranSchema>;
 export type DetailJenisPembayaranInput = z.infer<typeof DetailJenisPembayaranSchema>;
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;

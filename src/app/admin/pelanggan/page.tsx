@@ -1,8 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { Eye } from "lucide-react";
+import Link from "next/link";
+import DeletePelangganButton from "./delete-button";
 
 async function getAllPelanggan() {
   return await prisma.pelanggan.findMany({
@@ -22,7 +26,7 @@ export default async function AdminPelangganPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Data Pelanggan</h1>
-        <p className="text-muted-foreground">Daftar pelanggan yang terdaftar</p>
+        <p className="text-muted-foreground">Daftar pelanggan yang terdaftar - Klik detail untuk melihat profil lengkap termasuk KTP</p>
       </div>
 
       <Card>
@@ -42,9 +46,11 @@ export default async function AdminPelangganPage() {
                     <TableHead>Nama</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Telepon</TableHead>
-                    <TableHead>Alamat</TableHead>
+                    <TableHead>Alamat Utama</TableHead>
+                    <TableHead>KTP</TableHead>
                     <TableHead>Total Pesanan</TableHead>
                     <TableHead>Terdaftar</TableHead>
+                    <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -59,10 +65,32 @@ export default async function AdminPelangganPage() {
                         {pelanggan.alamat1 || "-"}
                       </TableCell>
                       <TableCell>
+                        {pelanggan.kartuId ? (
+                          <span className="text-green-600 text-sm">✓ Ada</span>
+                        ) : (
+                          <span className="text-red-500 text-sm">✗ Tidak ada</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         {pelanggan._count.pemesanans} pesanan
                       </TableCell>
                       <TableCell>
                         {format(pelanggan.createdAt, "dd MMM yyyy", { locale: id })}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Link href={`/admin/pelanggan/${pelanggan.id.toString()}`}>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-1" />
+                              Detail
+                            </Button>
+                          </Link>
+                          <DeletePelangganButton 
+                            id={Number(pelanggan.id)} 
+                            nama={pelanggan.namaPelanggan}
+                            hasPesanan={pelanggan._count.pemesanans > 0}
+                          />
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -13,7 +13,18 @@ export async function registerPelanggan(data: RegisterPelangganInput) {
       return { error: validatedData.error.issues[0].message };
     }
 
-    const { email, password, namaPelanggan, telepon, alamat1 } = validatedData.data;
+    const { 
+      email, 
+      password, 
+      namaPelanggan, 
+      tglLahir,
+      telepon, 
+      alamat1,
+      alamat2,
+      alamat3,
+      kartuId,
+      foto 
+    } = validatedData.data;
 
     // Cek email sudah ada atau belum
     const existingPelanggan = await prisma.pelanggan.findUnique({
@@ -27,14 +38,19 @@ export async function registerPelanggan(data: RegisterPelangganInput) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create pelanggan
+    // Create pelanggan dengan semua data
     await prisma.pelanggan.create({
       data: {
         namaPelanggan,
         email,
         password: hashedPassword,
+        tglLahir: new Date(tglLahir),
         telepon,
         alamat1,
+        alamat2: alamat2 || null,
+        alamat3: alamat3 || null,
+        kartuId,
+        foto: foto || null,
       },
     });
 
@@ -43,5 +59,22 @@ export async function registerPelanggan(data: RegisterPelangganInput) {
   } catch (error) {
     console.error(error);
     return { error: "Terjadi kesalahan sistem" };
+  }
+}
+
+export async function checkEmailAction(email: string) {
+  try {
+    const existingPelanggan = await prisma.pelanggan.findUnique({
+      where: { email },
+    });
+
+    if (existingPelanggan) {
+      return { error: "Email sudah terdaftar" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: "Terjadi kesalahan saat mengecek email" };
   }
 }
