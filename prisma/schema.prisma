@@ -129,7 +129,6 @@ model Pemesanan {
   idPelanggan  BigInt      @map("id_pelanggan")
   idJenisBayar BigInt      @map("id_jenis_bayar")
   noResi       String?     @map("no_resi") @db.VarChar(30)
-  alamatKirim  String?     @map("alamat_kirim") @db.VarChar(255)
   tglPesan     DateTime    @default(now()) @map("tgl_pesan")
   statusPesan  StatusPesan @default(Menunggu_Konfirmasi) @map("status_pesan")
   totalBayar   BigInt      @default(0) @map("total_bayar")

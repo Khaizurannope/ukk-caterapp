@@ -67,6 +67,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: pelanggan.namaPelanggan,
             role: "pelanggan",
             type: "customer",
+            image: pelanggan.foto,
           };
         }
 
@@ -75,12 +76,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.type = user.type;
+        token.picture = user.image; // Simpan foto ke token saat login
       }
+
+      if (trigger === "update" && session) {
+        if (session.user?.image) token.picture = session.user.image;
+        if (session.user?.name) token.name = session.user.name;
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -88,6 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.user.type = token.type as string;
+        session.user.image = token.picture as string; // Teruskan foto ke session
       }
       return session;
     },

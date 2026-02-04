@@ -58,7 +58,6 @@ export const PaketSchema = z.object({
 export const PemesananSchema = z.object({
   pelangganId: z.coerce.number(),
   jenisPembayaranId: z.coerce.number(),
-  alamatKirim: z.string().min(10, { message: "Alamat minimal 10 karakter" }),
   tglPesan: z.coerce.date(),
   items: z.array(z.object({
     paketId: z.coerce.number(),

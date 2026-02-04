@@ -102,7 +102,7 @@ export async function getPemesananById(id: number) {
 // BUAT PEMESANAN (PELANGGAN)
 export async function createPemesanan(data: PemesananInput) {
   try {
-    const { pelangganId, jenisPembayaranId, alamatKirim, tglPesan, items } = data;
+    const { pelangganId, jenisPembayaranId, tglPesan, items } = data;
 
     // Hitung total pembayaran
     const totalBayar = items.reduce((acc, item) => acc + (item.hargaPaket * item.jumlahOrder), 0);
@@ -114,7 +114,6 @@ export async function createPemesanan(data: PemesananInput) {
           idPelanggan: BigInt(pelangganId),
           idJenisBayar: BigInt(jenisPembayaranId),
           noResi: generateNoResi(),
-          alamatKirim: alamatKirim,
           tglPesan: new Date(tglPesan),
           statusPesan: "Menunggu_Konfirmasi",
           totalBayar: BigInt(totalBayar),

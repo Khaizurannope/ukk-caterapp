@@ -255,7 +255,7 @@ export default async function PesananDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">{pesanan.alamatKirim}</p>
+            <p className="text-muted-foreground">{pesanan.pelanggan.alamat1 || "-"}</p>
           </CardContent>
         </Card>
 

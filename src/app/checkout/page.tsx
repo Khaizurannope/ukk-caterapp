@@ -29,9 +29,17 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { createPemesanan } from "@/actions/pemesanan-actions";
-import { getJenisPembayaran } from "@/actions/data-actions";
+import { getJenisPembayaran, getPelangganById } from "@/actions/data-actions";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+
+interface Pelanggan {
+  id: bigint;
+  namaPelanggan: string;
+  alamat1: string | null;
+  alamat2: string | null;
+  alamat3: string | null;
+}
 
 interface CartItem {
   paketId: string;
@@ -61,9 +69,9 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [jenisPembayaran, setJenisPembayaran] = useState<JenisPembayaran[]>([]);
+  const [pelanggan, setPelanggan] = useState<Pelanggan | null>(null);
 
   // Form state
-  const [alamatKirim, setAlamatKirim] = useState("");
   const [tglPesan, setTglPesan] = useState("");
   const [selectedPembayaran, setSelectedPembayaran] = useState("");
 
@@ -97,12 +105,22 @@ export default function CheckoutPage() {
 
     loadCart();
     loadPembayaran();
+    if (session?.user?.id) {
+      loadPelanggan(Number(session.user.id));
+    }
   }, [status, session, router, loadCart]);
 
   const loadPembayaran = async () => {
     const result = await getJenisPembayaran();
     if (result.success && result.data) {
       setJenisPembayaran(result.data as unknown as JenisPembayaran[]);
+    }
+  };
+
+  const loadPelanggan = async (id: number) => {
+    const result = await getPelangganById(id);
+    if (result.data) {
+      setPelanggan(result.data as unknown as Pelanggan);
     }
   };
 
@@ -123,13 +141,18 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!alamatKirim || !tglPesan || !selectedPembayaran) {
+    if (!tglPesan || !selectedPembayaran) {
       toast.error("Mohon lengkapi semua data");
       return;
     }
 
     if (!session?.user?.id) {
       toast.error("Session tidak valid");
+      return;
+    }
+
+    if (!pelanggan?.alamat1) {
+      toast.error("Alamat pengiriman belum diisi. Silakan lengkapi di Profil Saya.");
       return;
     }
 
@@ -140,7 +163,6 @@ export default function CheckoutPage() {
       const orderData = {
         pelangganId: Number(session.user.id),
         tglPesan: new Date(tglPesan),
-        alamatKirim,
         jenisPembayaranId: Number(selectedPembayaran),
         items: cart.map((item) => ({
           paketId: Number(item.paketId),
@@ -213,22 +235,28 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Form */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Delivery Address */}
+                {/* Informasi Alamat Pengiriman */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-orange-500" />
+                       <MapPin className="h-5 w-5 text-orange-500" />
                       Alamat Pengiriman
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Textarea
-                      placeholder="Masukkan alamat lengkap pengiriman..."
-                      value={alamatKirim}
-                      onChange={(e) => setAlamatKirim(e.target.value)}
-                      rows={4}
-                      required
-                    />
+                    <div className="space-y-4">
+                      <div className="p-3 bg-muted rounded-md text-sm text-foreground">
+                        <p className="font-semibold text-orange-600 mb-1">Alamat Utama:</p>
+                        <p>{pelanggan?.alamat1 || "-"}</p>
+                      </div>
+                      
+                      {(pelanggan?.alamat2 || pelanggan?.alamat3) && (
+                         <div className="text-xs text-muted-foreground">
+                            <p>* Pesanan akan dikirim ke Alamat Utama.</p>
+                            <p>* Untuk mengubah alamat pengiriman, silakan edit di menu Profil Saya sebelum memesan.</p>
+                         </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
