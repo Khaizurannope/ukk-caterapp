@@ -1,4 +1,4 @@
-# 🍽️ Catering App
+# 🍽️ Go-Ring
 
 Aplikasi pemesanan catering berbasis web yang dibangun dengan **Next.js 16**, **Prisma ORM**, dan **PostgreSQL**. Aplikasi ini mendukung multi-role user (Admin, Owner, Kurir, dan Pelanggan) dengan fitur lengkap untuk manajemen pesanan, pengiriman, dan pembayaran.
 
@@ -95,14 +95,8 @@ Berikut adalah teknikal stack lengkap dan tools yang digunakan dalam pengembanga
 ### **Development Tools**
 Tools yang direkomendasikan untuk pengembangan project ini:
 - **Code Editor**: [Visual Studio Code](https://code.visualstudio.com/)
-- **VS Code Extensions**:
-  - **Prisma**: Syntax highlighting & formatting schema.prisma
-  - **Tailwind CSS IntelliSense**: Autocomplete class names
-  - **ESLint & Prettier**: Linter & Formatter code
-  - **Pretty TypeScript Errors**: Memperjelas pesan error TS
 - **Database Client**: 
   - [Prisma Studio](https://www.prisma.io/studio) (Bawaan: `npx prisma studio`)
-  - [DBeaver](https://dbeaver.io/) atau [TablePlus](https://tableplus.com/) (Opsional)
 - **API Testing**: [Postman](https://www.postman.com/) (Opsional)
 - **Version Control**: [Git](https://git-scm.com/) & [GitHub](https://github.com/)
 
