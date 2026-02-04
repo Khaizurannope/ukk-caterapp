@@ -70,8 +70,12 @@ async function main() {
       email: "siti@gmail.com",
       password: hashedPassword,
       telepon: "081234567890",
-      alamat1: "Jl. Merdeka No. 123, Bandung",
+      alamat1: "Jl. Merdeka No. 123, Kel. Babakan Ciamis, Kec. Sumur Bandung, Bandung 40117",
+      alamat2: "Jl. Asia Afrika No. 65, Bandung",
+      alamat3: null,
       tglLahir: new Date("1995-05-15"),
+      foto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
+      kartuId: "https://images.unsplash.com/photo-1578670812003-60745e2c2ea9?w=400&h=250&fit=crop",
     },
   });
   console.log("✅ Pelanggan 1 created:", pelanggan1.email);
@@ -84,9 +88,12 @@ async function main() {
       email: "joko@gmail.com",
       password: hashedPassword,
       telepon: "081298765432",
-      alamat1: "Jl. Asia Afrika No. 45, Bandung",
+      alamat1: "Jl. Asia Afrika No. 45, Kel. Braga, Kec. Sumur Bandung, Bandung 40111",
       alamat2: "Jl. Braga No. 10, Bandung",
+      alamat3: "Jl. Dago No. 88, Bandung",
       tglLahir: new Date("1990-10-20"),
+      foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
+      kartuId: "https://images.unsplash.com/photo-1578670812003-60745e2c2ea9?w=400&h=250&fit=crop",
     },
   });
   console.log("✅ Pelanggan 2 created:", pelanggan2.email);
@@ -122,6 +129,13 @@ async function main() {
   // =====================================
   // 4. SEED DETAIL JENIS PEMBAYARAN
   // =====================================
+  // Hapus detail lama agar tidak duplikat (karena tidak ada unique constraint)
+  await prisma.detailJenisPembayaran.deleteMany({
+    where: {
+      idJenisPembayaran: { in: [transferBank.id, eWallet.id] }
+    }
+  });
+
   await prisma.detailJenisPembayaran.createMany({
     data: [
       {
@@ -237,11 +251,24 @@ async function main() {
   ];
 
   for (const paket of pakets) {
-    await prisma.paket.create({
-      data: paket,
+    const existing = await prisma.paket.findFirst({
+      where: { namaPaket: paket.namaPaket },
     });
+
+    if (existing) {
+      await prisma.paket.update({
+        where: { id: existing.id },
+        data: paket,
+      });
+      console.log(`🔄 Paket '${paket.namaPaket}' updated`);
+    } else {
+      await prisma.paket.create({
+        data: paket,
+      });
+      console.log(`✅ Paket '${paket.namaPaket}' created`);
+    }
   }
-  console.log("✅ Paket (Menu) created:", pakets.length, "items");
+  console.log("✅ Paket (Menu) seeded");
 
   console.log("\n🎉 Seeding selesai!");
   console.log("\n📝 Akun Login:");

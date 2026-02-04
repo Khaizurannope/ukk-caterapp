@@ -35,32 +35,61 @@ export default async function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 via-orange-400 to-yellow-400 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto px-4 py-24 lg:py-32 relative z-10">
-          <div className="max-w-3xl">
-            <Badge className="mb-4 bg-white/20 text-white hover:bg-white/30">
-              #1 Catering Terpercaya
-            </Badge>
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6">
-              Hidangan Lezat untuk Momen Spesial Anda
-            </h1>
-            <p className="text-lg lg:text-xl mb-8 text-white/90">
-              Layanan catering profesional untuk pernikahan, selamatan, ulang tahun, 
-              studi tour, dan berbagai acara penting lainnya. Cita rasa autentik 
-              dengan pelayanan terbaik.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/menu">
-                <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100">
-                  Lihat Menu <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
-                  Daftar Sekarang
-                </Button>
-              </Link>
+      <section className="relative bg-gradient-to-br from-orange-500 via-orange-400 to-yellow-400 text-white overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="container mx-auto px-4 py-20 lg:py-28 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <Badge className="mb-4 bg-white/20 text-white hover:bg-white/30 border-none">
+                #1 Catering Terpercaya
+              </Badge>
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                Hidangan Lezat untuk Momen Spesial Anda
+              </h1>
+              <p className="text-lg lg:text-xl mb-8 text-white/90 max-w-2xl mx-auto lg:mx-0">
+                Layanan catering profesional untuk pernikahan, selamatan, ulang tahun, 
+                studi tour, dan berbagai acara penting lainnya. Cita rasa autentik 
+                dengan pelayanan terbaik.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link href="/menu">
+                  <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100 w-full sm:w-auto">
+                    Lihat Menu <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                    Daftar Sekarang
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            {/* Hero Image */}
+            <div className="hidden lg:block relative transform hover:scale-105 transition-transform duration-500">
+              <div className="relative h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20">
+                <Image 
+                  src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80"
+                  alt="Professional Catering Service & Make Up"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              
+              {/* Floating Decoration */}
+              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl text-gray-800 animate-bounce delay-1000">
+                <div className="flex items-center gap-3">
+                  <div className="bg-yellow-100 p-2 rounded-full">
+                    <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-lg">4.9/5</p>
+                    <p className="text-xs text-gray-500">Rating Pelanggan</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

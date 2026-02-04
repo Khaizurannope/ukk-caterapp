@@ -265,27 +265,18 @@ ${message}`;
 
             {/* Map & Additional Info */}
             <div className="space-y-6">
-              {/* Map Placeholder */}
+              {/* Map */}
               <Card className="overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500">Peta Lokasi</p>
-                    <p className="text-sm text-gray-400">
-                      Ganti dengan embed Google Maps
-                    </p>
-                  </div>
-                </div>
-                {/* Uncomment and replace with your actual Google Maps embed */}
-                {/* <iframe 
-                  src="https://www.google.com/maps/embed?pb=YOUR_EMBED_URL"
+                <iframe 
+                  src="https://maps.google.com/maps?q=Jl.+Merdeka+No.+123,+Bandung&z=15&output=embed"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                /> */}
+                  title="Lokasi Go-Ring Catering"
+                />
               </Card>
 
               {/* Social Media */}

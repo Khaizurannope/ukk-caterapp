@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import {
   ChefHat,
@@ -13,10 +13,10 @@ import {
   Truck,
   FileText,
   CreditCard,
-  LogOut,
   Menu,
   X,
 } from "lucide-react";
+import LogoutDialog from "@/components/logout-dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
@@ -111,14 +111,7 @@ function SidebarContent({ session, links, pathname, roleLabel, onLinkClick }: Si
 
       {/* Logout */}
       <div className="p-4 border-t">
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-          onClick={() => signOut({ callbackUrl: "/" })}
-        >
-          <LogOut className="mr-2 h-5 w-5" />
-          Logout
-        </Button>
+        <LogoutDialog variant="sidebar" />
       </div>
     </>
   );

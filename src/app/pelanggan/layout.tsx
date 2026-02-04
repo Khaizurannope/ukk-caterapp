@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { 
   ShoppingBag, 
   User, 
-  Clock, 
-  LogOut 
+  Clock 
 } from "lucide-react";
+import LogoutDialogWrapper from "./logout-dialog-wrapper";
 
 export default async function PelangganLayout({
   children,
@@ -66,15 +66,7 @@ export default async function PelangganLayout({
                 </Button>
               </Link>
             ))}
-            <Link href="/api/auth/signout">
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3 text-red-500 hover:bg-red-50 hover:text-red-600"
-              >
-                <LogOut className="h-5 w-5" />
-                Keluar
-              </Button>
-            </Link>
+            <LogoutDialogWrapper />
           </aside>
 
           {/* Main Content */}

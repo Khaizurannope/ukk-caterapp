@@ -42,11 +42,11 @@ Aplikasi pemesanan catering berbasis web yang dibangun dengan **Next.js 16**, **
 - Registrasi dan login
 - Lihat menu paket catering
 - Keranjang belanja
-- Checkout dan pembayaran
+- Checkout dan pembayaran (Otomatis menggunakan alamat dari profil)
+- Manajemen profil dengan 3 alamat pengiriman
 - Upload bukti transfer
 - Tracking pesanan
 - Riwayat pesanan
-- Manajemen profil
 
 ---
 
@@ -361,7 +361,8 @@ Setelah menjalankan seed (`npm run db:seed`), akun berikut tersedia untuk testin
 | Start | `npm run start` | Jalankan production server |
 | Lint | `npm run lint` | Jalankan ESLint |
 | DB Push | `npm run db:push` | Push schema ke database |
-| DB Seed | `npm run db:seed` | Seed data awal |
+| DB Seed | `npm run db:seed` | Seed data awal (dengan proteksi duplikasi) |
+| DB Reset | `npm run db:reset` | Reset TOTAL database (Hapus Semua + Seed) |
 | DB Studio | `npm run db:studio` | Buka Prisma Studio |
 
 ---

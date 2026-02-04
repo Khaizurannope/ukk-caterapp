@@ -44,19 +44,19 @@ export default function TentangKamiPage() {
     {
       name: "Budi Santoso",
       role: "Founder & Head Chef",
-      image: "/placeholder-avatar.jpg",
+      image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop",
       description: "Berpengalaman lebih dari 15 tahun di industri kuliner.",
     },
     {
       name: "Siti Rahayu",
       role: "Operations Manager",
-      image: "/placeholder-avatar.jpg",
+      image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&h=400&fit=crop",
       description: "Memastikan setiap pesanan berjalan lancar dan tepat waktu.",
     },
     {
       name: "Agus Wijaya",
       role: "Executive Chef",
-      image: "/placeholder-avatar.jpg",
+      image: "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=400&fit=crop",
       description: "Ahli dalam menciptakan menu-menu kreatif dan lezat.",
     },
   ];
@@ -112,8 +112,14 @@ export default function TentangKamiPage() {
               </p>
             </div>
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center">
-                <ChefHat className="w-32 h-32 text-orange-500" />
+              <div className="aspect-square rounded-2xl overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1555244162-803834f70033?w=600&h=600&fit=crop"
+                  alt="Tim Go-Ring Catering"
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover"
+                />
               </div>
               {/* Floating card */}
               <Card className="absolute -bottom-6 -left-6 shadow-lg">
@@ -229,8 +235,13 @@ export default function TentangKamiPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {team.map((member, index) => (
               <Card key={index} className="text-center overflow-hidden group hover:shadow-lg transition-shadow">
-                <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <Users className="w-20 h-20 text-gray-400 group-hover:text-orange-500 transition-colors" />
+                <div className="aspect-square relative overflow-hidden">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
