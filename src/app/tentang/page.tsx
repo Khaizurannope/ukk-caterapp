@@ -42,21 +42,21 @@ export default function TentangKamiPage() {
 
   const team = [
     {
-      name: "Budi Santoso",
+      name: "Dhiaraqi A Khaizuran",
       role: "Founder & Head Chef",
-      image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop",
+      image: "/img/rq.jpeg",
       description: "Berpengalaman lebih dari 15 tahun di industri kuliner.",
     },
     {
-      name: "Siti Rahayu",
+      name: "Muhammad Akmal Siregar",
       role: "Operations Manager",
-      image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&h=400&fit=crop",
+      image: "/img/aml.jpeg",
       description: "Memastikan setiap pesanan berjalan lancar dan tepat waktu.",
     },
     {
-      name: "Agus Wijaya",
+      name: "Attar Rifai",
       role: "Executive Chef",
-      image: "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=400&fit=crop",
+      image: "/img/tr.jpeg",
       description: "Ahli dalam menciptakan menu-menu kreatif dan lezat.",
     },
   ];
